@@ -13,6 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "addresses")
+@NamedQueries({
+        @NamedQuery(name = "Address.countAll", query = "SELECT COUNT(a) FROM Address a")})
 public class Address {
 
     @Id

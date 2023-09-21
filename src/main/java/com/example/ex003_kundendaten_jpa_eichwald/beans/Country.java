@@ -14,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "countries")
+@NamedQueries({
+        @NamedQuery(name = "Country.countAll", query = "SELECT COUNT(c) FROM Country c")})
 public class Country {
 
     @Id

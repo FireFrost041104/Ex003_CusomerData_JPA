@@ -12,6 +12,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "customers")
+@NamedQueries({
+        @NamedQuery(name = "Customer.countAll", query = "SELECT COUNT(cu) FROM Customer cu")})
 public class Customer {
 
     @Id

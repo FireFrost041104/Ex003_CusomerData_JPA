@@ -3,10 +3,11 @@ package com.example.ex003_kundendaten_jpa_eichwald;
 import com.example.ex003_kundendaten_jpa_eichwald.pojos.Address;
 import com.example.ex003_kundendaten_jpa_eichwald.pojos.Country;
 import com.example.ex003_kundendaten_jpa_eichwald.pojos.Customer;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.Query;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.*;
+
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -74,8 +75,57 @@ public class Main {
     }
 
     public void importJSON(String jsonFilePath) {
-        // Implement JSON import logic here
-        // Parse JSON, create Pojo objects, and persist them
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            Customer[] customers = objectMapper.readValue(new File(jsonFilePath), Customer[].class);
+
+            for (Customer customer : customers) {
+                open(); // Transaktion öffnen
+                em.persist(customer); // Kunden persistieren
+                close(); // Transaktion schließen
+            }
+
+            System.out.println("JSON-Daten wurden erfolgreich importiert.");
+        } catch (IOException e) {
+            System.err.println("Fehler beim Importieren der JSON-Daten: " + e.getMessage());
+        }
+    }
+
+    public long queryCountriesImported() {
+        open(); // Transaktion öffnen
+
+        // Verwenden Sie ein NamedQuery, um die Anzahl der importierten Länder abzurufen
+        TypedQuery<Long> query = em.createNamedQuery("Country.countAll", Long.class);
+        long countriesImported = query.getSingleResult();
+
+        close(); // Transaktion schließen
+
+        return countriesImported;
+    }
+
+    public long queryAddressesImported() {
+        open(); // Transaktion öffnen
+
+        // Verwenden Sie ein NamedQuery, um die Anzahl der importierten Adressen abzurufen
+        TypedQuery<Long> query = em.createNamedQuery("Address.countAll", Long.class);
+        long addressesImported = query.getSingleResult();
+
+        close(); // Transaktion schließen
+
+        return addressesImported;
+    }
+
+    public long queryCustomersImported() {
+        open(); // Transaktion öffnen
+
+        // Verwenden Sie ein NamedQuery, um die Anzahl der importierten Kunden abzurufen
+        TypedQuery<Long> query = em.createNamedQuery("Customer.countAll", Long.class);
+        long customersImported = query.getSingleResult();
+
+        close(); // Transaktion schließen
+
+        return customersImported;
     }
 
     public void menu() {
@@ -110,13 +160,16 @@ public class Main {
                     close();
                     break;
                 case 3:
-                    // Implement query for countries imported
+                    long countriesImported = queryCountriesImported();
+                    System.out.println("Countries imported: " + countriesImported);
                     break;
                 case 4:
-                    // Implement query for addresses imported
+                    long addressesImported = queryAddressesImported();
+                    System.out.println("Addresses imported: " + addressesImported);
                     break;
                 case 5:
-                    // Implement query for customers imported
+                    long customersImported = queryCustomersImported();
+                    System.out.println("Customers imported: " + customersImported);
                     break;
                 case 6:
                     exit = true;
