@@ -8,9 +8,10 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.Query;
 import java.time.LocalDate;
+import java.util.Scanner;
 
 public class Main {
-
+/*
         public static void main(String[] args) {
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("PU_KundendatenDB");
             EntityManager em = emf.createEntityManager();
@@ -47,5 +48,91 @@ public class Main {
                 emf.close();
             }
         }
+ */
+
+    private EntityManagerFactory emf;
+    private EntityManager em;
+
+    public Main() {
+        emf = Persistence.createEntityManagerFactory("customerdb");
+        em = emf.createEntityManager();
+    }
+
+    public void open() {
+        em.getTransaction().begin();
+    }
+
+    public void close() {
+        em.getTransaction().commit();
+        em.close();
+        emf.close();
+    }
+
+    public void importXML(String xmlFilePath) {
+        // Implement XML import logic here
+        // Parse XML, create Pojo objects, and persist them
+    }
+
+    public void importJSON(String jsonFilePath) {
+        // Implement JSON import logic here
+        // Parse JSON, create Pojo objects, and persist them
+    }
+
+    public void menu() {
+        Scanner scanner = new Scanner(System.in);
+        boolean exit = false;
+
+        while (!exit) {
+            System.out.println("1. Import XML");
+            System.out.println("2. Import JSON");
+            System.out.println("3. Query: Countries imported");
+            System.out.println("4. Query: Addresses imported");
+            System.out.println("5. Query: Customers imported");
+            System.out.println("6. Exit");
+            System.out.print("Select an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter XML file path: ");
+                    String xmlFilePath = scanner.nextLine();
+                    open();
+                    importXML(xmlFilePath);
+                    close();
+                    break;
+                case 2:
+                    System.out.print("Enter JSON file path: ");
+                    String jsonFilePath = scanner.nextLine();
+                    open();
+                    importJSON(jsonFilePath);
+                    close();
+                    break;
+                case 3:
+                    // Implement query for countries imported
+                    break;
+                case 4:
+                    // Implement query for addresses imported
+                    break;
+                case 5:
+                    // Implement query for customers imported
+                    break;
+                case 6:
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Invalid option. Try again.");
+                    break;
+            }
+        }
+
+        scanner.close();
+    }
+
+    public static void main(String[] args) {
+        Main dataImport = new Main();
+        dataImport.menu();
+    }
 }
 
