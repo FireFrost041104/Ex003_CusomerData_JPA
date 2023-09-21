@@ -55,7 +55,7 @@ public class Main {
     private EntityManager em;
 
     public Main() {
-        emf = Persistence.createEntityManagerFactory("customerdb");
+        emf = Persistence.createEntityManagerFactory("PU_KundendatenDB");
         em = emf.createEntityManager();
     }
 
@@ -70,8 +70,6 @@ public class Main {
     }
 
     public void importXML(String xmlFilePath) {
-        // Implement XML import logic here
-        // Parse XML, create Pojo objects, and persist them
     }
 
     public void importJSON(String jsonFilePath) {
